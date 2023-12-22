@@ -1,0 +1,2 @@
+url = "https://developer.automationanywhere.com/challenges/automationanywherelabs-customeronboarding.html?_gl=1*1s8kpng*_ga*OTA3MTMwMDU5LjE3MDExMDM1OTg.*_ga_DG1BTLENXK*MTcwMzI1NDkyNS4yLjEuMTcwMzI1NTAzMS4yMi4wLjA.&_ga=2.201385169.1165016249.1703254926-907130059.1701103598&_fsi=iyPUJkUI"
+caminho_do_arquivo = "C:\Users\thiago.honorato\Downloads\customer-onboarding-challenge.csv"
