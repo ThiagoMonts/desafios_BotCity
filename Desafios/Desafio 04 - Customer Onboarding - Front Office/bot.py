@@ -27,6 +27,8 @@ from botcity.web import WebBot, Browser, By
 # Import for integration with BotCity Maestro SDK
 from botcity.maestro import *
 
+import pandas
+
 import variables
 import os
 
@@ -58,12 +60,83 @@ def main():
     # Opens the BotCity website.
     bot.browse(variables.url)
     
-    if not os.path.exists(caminho_do_arquivo):
-        print(f'O arquivo {caminho_do_arquivo} não existe.')
+    if not os.path.exists(r"C:\Users\thiago.honorato\Documents\desafios_BotCity\Desafios\Desafio 04 - Customer Onboarding - Front Office\customer-onboarding-challenge.csv"):
+        if not bot.find( "download_button", matching=0.97, waiting_time=10000):
+            not_found("download_button")
+        bot.click()
+        
     else:
-        print(f'O arquivo {caminho_do_arquivo} existe.')
+        pass
+
+    dados = pandas.read_csv(r"C:\Users\thiago.honorato\Documents\desafios_BotCity\Desafios\Desafio 04 - Customer Onboarding - Front Office\customer-onboarding-challenge.csv", sep=",")
+
+    for index, row in dados.iterrows():
+        customer_name_field = bot.find_element("//div[contains(@class, 'form-group')]//input[@id='customerName']", By.XPATH)
+        customer_name_field.send_keys(row["Company Name"])
+
+        bot.wait(500)
+
+        customer_id_field = bot.find_element("//div[contains(@class, 'form-group')]//input[@id='customerID']", By.XPATH)
+        customer_id_field.send_keys(row["Customer ID"])
+
+        bot.wait(500)
+
+        primary_contact_field = bot.find_element("//div[contains(@class, 'form-group')]//input[@id='primaryContact']", By.XPATH)
+        primary_contact_field.send_keys(row["Primary Contact"])
+
+        bot.wait(500)
+
+        street_address_field = bot.find_element("//div[contains(@class, 'form-group')]//input[@id='street']", By.XPATH)
+        street_address_field.send_keys(row["Street Address"])     
+
+        bot.wait(500)
+
+        city_field = bot.find_element("//div[contains(@class, 'form-row')]//input[@id='city']", By.XPATH)
+        city_field.send_keys(row["City"])
+
+        bot.wait(500)
+
+        state_field_option = bot.find_element(f"//div[contains(@class, 'form-group')]//select[@id='state']//option [@value='{row['State']}']", By.XPATH)
+        state_field_option.click()
+
+        bot.wait(500)
+
+        zip_field = bot.find_element("//div[contains(@class, 'form-row')]//input[@id='zip']", By.XPATH)
+        zip_field.send_keys(row["Zip"])
+
+        bot.wait(500)
+
+        email_field = bot.find_element("//div[contains(@class, 'form-group')]//input[@id='email']", By.XPATH)
+        email_field.send_keys(row["Email Address"])
+
+        bot.wait(500)
+
+        offers_discount = row["Offers Discounts"]
+        if offers_discount == "YES":
+            offers_discount_field = bot.find_element("//div[contains(@class, 'form-check')]//input[@id='activeDiscountYes']", By.XPATH)
+            offers_discount_field.click()
+        else:
+            offers_discount_field = bot.find_element("//div[contains(@class, 'form-check')]//input[@id='activeDiscountNo']", By.XPATH)
+            offers_discount_field.click()
+        
+        bot.wait(500)
+
+        non_disclosure = row["Non-Disclosure On File"]
+        non_disclosure_field = bot.find_element("//div[contains(@class, 'form-group')]//input[@id='NDA']", By.XPATH)
+        
+        if non_disclosure == "YES":
+            non_disclosure_field.click()
+        else:
+            if non_disclosure_field.is_selected():
+                non_disclosure_field.click()
 
 
+        bot.wait(500)
+
+        submit_btn = bot.find_element("//div[contains(@class, 'form-group')]//button[@id='submit_button']", By.XPATH)
+        submit_btn.click()
+
+        bot.wait(500)
 
     # Wait 3 seconds before closing
     bot.wait(3000)
